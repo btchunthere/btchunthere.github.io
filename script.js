@@ -170,21 +170,26 @@ const generateKey = () => {
   resetBalances();
 
   const checkAllBalances = async () => {
-    const compressedBalance = await checkBalance(compressedAddress, 'compressed');
-    await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+    try {
+      const compressedBalance = await checkBalance(compressedAddress, 'compressed');
+      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
 
-    const uncompressedBalance = await checkBalance(uncompressedAddress, 'uncompressed');
-    await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+      const uncompressedBalance = await checkBalance(uncompressedAddress, 'uncompressed');
+      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
 
-    const bech32Balance = await checkBalance(bech32Address, 'bech32');
-    await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+      const bech32Balance = await checkBalance(bech32Address, 'bech32');
+      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
 
-    if (compressedBalance > 0 || uncompressedBalance > 0 || bech32Balance > 0) {
-      setTimeout(() => {
-        generateKey();
-      }, 20000);
-    } else {
-      setTimeout(generateKey, 2000); // 2 seconds delay before generating new key
+      if (compressedBalance > 0 || uncompressedBalance > 0 || bech32Balance > 0) {
+        setTimeout(() => {
+          generateKey();
+        }, 20000);
+      } else {
+        setTimeout(generateKey, 2000); // 2 seconds delay before generating new key
+      }
+    } catch (error) {
+      console.error('Error checking balances:', error);
+      setTimeout(checkAllBalances, 2000); // Retry after 2 seconds if an error occurs
     }
   };
 
