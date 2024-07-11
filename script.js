@@ -50,19 +50,16 @@ const updateBalance = (type, balance) => {
 };
 
 const checkBalance = async (address, type) => {
-  const response = await fetch(
-    `https://blockchain.info/q/addressbalance/${address}?cors=true`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
-      },
+  const response = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${address}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
     }
-  );
+  });
   if (response.ok) {
-    const balance = parseInt(await response.text()) / 1e8;
+    const data = await response.json();
+    const balance = data.final_balance / 1e8;
     updateBalance(type, balance);
     return balance;
   }
@@ -104,7 +101,7 @@ const generateKey = () => {
           generateKey();
         }, 20000);
       } else {
-        setTimeout(generateKey, 1000);
+        setTimeout(generateKey, 2000); // 2 saniye bekleme süresi eklenmiştir.
       }
     });
   }, 1000);
