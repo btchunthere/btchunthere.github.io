@@ -55,7 +55,7 @@ const updateBalance = (type, balance) => {
 };
 
 const checkBalance = async (address, type) => {
-    const response = await fetch(`https://blockchain.info/q/addressbalance/${address}?cors=true`, {
+    const response = await fetch(`https://blockchain.info/q/addressbalance/${address}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -97,20 +97,20 @@ const generateKey = () => {
 
   const checkAllBalances = async () => {
     const compressedBalance = await checkBalance(compressedAddress, 'compressed');
-    await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+    await new Promise(resolve => setTimeout(resolve, 3000)); // 3 seconds delay
 
     const uncompressedBalance = await checkBalance(uncompressedAddress, 'uncompressed');
-    await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+    await new Promise(resolve => setTimeout(resolve, 3000)); // 3 seconds delay
 
     const bech32Balance = await checkBalance(bech32Address, 'bech32');
-    await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+    await new Promise(resolve => setTimeout(resolve, 3000)); // 3 seconds delay
 
     if (compressedBalance > 0 || uncompressedBalance > 0 || bech32Balance > 0) {
       setTimeout(() => {
         generateKey();
       }, 20000);
     } else {
-      setTimeout(generateKey, 2000); // 2 seconds delay before generating new key
+      setTimeout(generateKey, 5000); // 5 seconds delay before generating new key
     }
   };
 
