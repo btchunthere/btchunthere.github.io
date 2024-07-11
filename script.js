@@ -59,7 +59,6 @@ const checkBalance = async (address, type) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
     }
   });
   if (response.ok) {
@@ -98,8 +97,13 @@ const generateKey = () => {
 
   const checkAllBalances = async () => {
     const compressedBalance = await checkBalance(compressedAddress, 'compressed');
+    await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+
     const uncompressedBalance = await checkBalance(uncompressedAddress, 'uncompressed');
+    await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+
     const bech32Balance = await checkBalance(bech32Address, 'bech32');
+    await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
 
     if (compressedBalance > 0 || uncompressedBalance > 0 || bech32Balance > 0) {
       setTimeout(() => {
