@@ -55,20 +55,20 @@ const updateBalance = (type, balance) => {
 };
 
 const checkBalance = async (address, type) => {
-  const response = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${address}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
+    const response = await fetch(`https://blockchain.info/q/addressbalance/${address}?cors=true`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    if (response.ok) {
+      const balance = parseInt(await response.text()) / 1e8;
+      updateBalance(type, balance);
+      return balance;
     }
-  });
-  if (response.ok) {
-    const data = await response.json();
-    const balance = data.final_balance / 1e8;
-    updateBalance(type, balance);
-    return balance;
-  }
-  return 0;
-};
+    return 0;
+  };
+  
 
 const generateKey = () => {
   const keyPair = bitcoinjs.ECPair.makeRandom();
