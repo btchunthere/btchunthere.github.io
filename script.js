@@ -36,12 +36,17 @@ const showPrivateKey = (key, addresses) => {
   document.getElementById('privateKey').innerText = key;
   document.getElementById('privateKey').classList.remove('blinking');
   document.getElementById('compressedAddress').innerText = addresses.compressed;
-  document.getElementById('uncompressedAddress').innerText =
-    addresses.uncompressed;
+  document.getElementById('uncompressedAddress').innerText = addresses.uncompressed;
   document.getElementById('bech32Address').innerText = addresses.bech32;
   document.getElementById('compressedAddress').classList.remove('blinking');
   document.getElementById('uncompressedAddress').classList.remove('blinking');
   document.getElementById('bech32Address').classList.remove('blinking');
+};
+
+const resetBalances = () => {
+  document.getElementById('compressedBalance').innerText = '... BTC';
+  document.getElementById('uncompressedBalance').innerText = '... BTC';
+  document.getElementById('bech32Balance').innerText = '... BTC';
 };
 
 const updateBalance = (type, balance) => {
@@ -50,15 +55,13 @@ const updateBalance = (type, balance) => {
 };
 
 const checkBalance = async (address, type) => {
-  const response = await fetch(
-    `https://api.blockcypher.com/v1/btc/main/addrs/${address}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  const response = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${address}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
     }
-  );
+  });
   if (response.ok) {
     const data = await response.json();
     const balance = data.final_balance / 1e8;
@@ -91,34 +94,23 @@ const generateKey = () => {
   };
 
   showPrivateKey(keyPair.toWIF(), addresses);
+  resetBalances();
 
-  // Sıralı API çağrıları ve bekleme süreleri
-  setTimeout(async () => {
-    const compressedBalance = await checkBalance(
-      compressedAddress,
-      'compressed'
-    );
-    setTimeout(async () => {
-      const uncompressedBalance = await checkBalance(
-        uncompressedAddress,
-        'uncompressed'
-      );
-      setTimeout(async () => {
-        const bech32Balance = await checkBalance(bech32Address, 'bech32');
-        if (
-          compressedBalance > 0 ||
-          uncompressedBalance > 0 ||
-          bech32Balance > 0
-        ) {
-          setTimeout(() => {
-            generateKey();
-          }, 20000);
-        } else {
-          setTimeout(generateKey, 2000); // 2 saniye bekleme süresi eklenmiştir.
-        }
-      }, 2000);
-    }, 2000);
-  }, 1000);
+  const checkAllBalances = async () => {
+    const compressedBalance = await checkBalance(compressedAddress, 'compressed');
+    const uncompressedBalance = await checkBalance(uncompressedAddress, 'uncompressed');
+    const bech32Balance = await checkBalance(bech32Address, 'bech32');
+
+    if (compressedBalance > 0 || uncompressedBalance > 0 || bech32Balance > 0) {
+      setTimeout(() => {
+        generateKey();
+      }, 20000);
+    } else {
+      setTimeout(generateKey, 2000); // 2 seconds delay before generating new key
+    }
+  };
+
+  setTimeout(checkAllBalances, 1000); // Initial delay before checking balances
 };
 
 generateKey();
