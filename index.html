@@ -1,144 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitcoin Private Key Checker | Bitcoin Security | Exposed Bitcoin Private Keys</title>
-    <meta name="description" content="Check all Bitcoin private keys here. Expose Bitcoin private keys and check Bitcoin address balances. Ensure Bitcoin security by verifying all Bitcoin addresses.">
-    <meta name="keywords" content="Bitcoin, Bitcoin hack, exposed private key, Bitcoin security, Bitcoin address check, Bitcoin private keys, all Bitcoin private keys, Bitcoin security check, Bitcoin balance check">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Bitcoin Private Key Checker | Bitcoin Security | Exposed Bitcoin Private Keys">
-    <meta property="og:description" content="Check all Bitcoin private keys here. Expose Bitcoin private keys and check Bitcoin address balances. Ensure Bitcoin security by verifying all Bitcoin addresses.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://btchunthere.github.io">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Bitcoin Private Key Checker | Bitcoin Security | Exposed Bitcoin Private Keys">
-    <meta name="twitter:description" content="Check all Bitcoin private keys here. Expose Bitcoin private keys and check Bitcoin address balances. Ensure Bitcoin security by verifying all Bitcoin addresses.">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Bitcoin Private Key Checker | Bitcoin Security | Exposed Bitcoin Private
+      Keys
+    </title>
+    <meta
+      name="description"
+      content="Check all Bitcoin private keys here. Expose Bitcoin private keys and check Bitcoin address balances. Ensure Bitcoin security by verifying all Bitcoin addresses."
+    />
+    <meta
+      name="keywords"
+      content="Bitcoin, Bitcoin hack, exposed private key, Bitcoin security, Bitcoin address check, Bitcoin private keys, all Bitcoin private keys, Bitcoin security check, Bitcoin balance check"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta
+      property="og:title"
+      content="Bitcoin Private Key Checker | Bitcoin Security | Exposed Bitcoin Private Keys"
+    />
+    <meta
+      property="og:description"
+      content="Check all Bitcoin private keys here. Expose Bitcoin private keys and check Bitcoin address balances. Ensure Bitcoin security by verifying all Bitcoin addresses."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://btchunthere.github.io" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Bitcoin Private Key Checker | Bitcoin Security | Exposed Bitcoin Private Keys"
+    />
+    <meta
+      name="twitter:description"
+      content="Check all Bitcoin private keys here. Expose Bitcoin private keys and check Bitcoin address balances. Ensure Bitcoin security by verifying all Bitcoin addresses."
+    />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-        body {
-            margin: 0;
-            overflow: hidden;
-            background: black;
-            color: lime;
-            font-family: 'Press Start 2P', cursive;
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+        color: lime;
+        font-family: 'Press Start 2P', cursive;
+      }
+      canvas {
+        display: block;
+      }
+      #info {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        font-size: 12px;
+        color: white;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        animation: fadeIn 2s ease-in-out;
+      }
+      .address-info {
+        margin: 10px 0;
+      }
+      .balance {
+        display: inline-block;
+        width: 100px;
+        text-align: left;
+        color: yellow;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
         }
-        canvas {
-            display: block;
+        to {
+          opacity: 1;
         }
-        #info {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            font-size: 12px;
-            color: white;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            animation: fadeIn 2s ease-in-out;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
         }
-        .address-info {
-            margin: 10px 0;
-        }
-        .balance {
-            display: inline-block;
-            width: 100px;
-            text-align: left;
-            color: yellow;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        @keyframes blink {
-            50% {
-                opacity: 0;
-            }
-        }
-        .blinking {
-            animation: blink 1s step-start infinite;
-        }
-        #disclaimer {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 10px;
-            text-align: center;
-            width: 80%;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 10px;
-        }
-        #searchStatus {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 14px;
-            text-align: center;
-            width: 80%;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 10px;
-        }
-        #donation {
-            position: absolute;
-            top: 5%;
-            left: 50%;
-            transform: translateX(-50%);
-            color: orange;
-            font-size: 14px;
-            text-align: center;
-            width: 80%;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 10px;
-        }
+      }
+      .blinking {
+        animation: blink 1s step-start infinite;
+      }
+      #disclaimer {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 10px;
+        text-align: center;
+        width: 80%;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 10px;
+        border-radius: 10px;
+      }
+      #searchStatus {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 14px;
+        text-align: center;
+        width: 80%;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 10px;
+        border-radius: 10px;
+      }
+      #donation {
+        position: absolute;
+        top: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+        color: orange;
+        font-size: 14px;
+        text-align: center;
+        width: 80%;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 10px;
+        border-radius: 10px;
+      }
     </style>
-</head>
-<body>
-    <div id="donation">
-        Donate: bc1qgh496v9l38j3g3z4lmjuvfk6uvhps44hlvcx66
-    </div>
+  </head>
+  <body>
+    <div id="donation">Donate: bc1qgh496v9l38j3g3z4lmjuvfk6uvhps44hlvcx66</div>
     <div id="searchStatus">
-        If a balance is found, the search will stop for 20 seconds and then continue.
+      If a balance is found, the search will stop for 20 seconds and then
+      continue.
     </div>
     <div id="info">
-        <div>Private Key: <span id="privateKey" class="blinking">Generating...</span></div>
-        <div class="address-info">
-            Compressed Address: <span id="compressedAddress" class="blinking">Generating...</span> - Balance: <span class="balance" id="compressedBalance">...</span>
-        </div>
-        <div class="address-info">
-            Uncompressed Address: <span id="uncompressedAddress" class="blinking">Generating...</span> - Balance: <span class="balance" id="uncompressedBalance">...</span>
-        </div>
-        <div class="address-info">
-            Bech32 Address: <span id="bech32Address" class="blinking">Generating...</span> - Balance: <span class="balance" id="bech32Balance">...</span>
-        </div>
+      <div>
+        Private Key: <span id="privateKey" class="blinking">Generating...</span>
+      </div>
+      <div class="address-info">
+        Compressed Address:
+        <span id="compressedAddress" class="blinking">Generating...</span> -
+        Balance: <span class="balance" id="compressedBalance">...</span>
+      </div>
+      <div class="address-info">
+        Uncompressed Address:
+        <span id="uncompressedAddress" class="blinking">Generating...</span> -
+        Balance: <span class="balance" id="uncompressedBalance">...</span>
+      </div>
+      <div class="address-info">
+        Bech32 Address:
+        <span id="bech32Address" class="blinking">Generating...</span> -
+        Balance: <span class="balance" id="bech32Balance">...</span>
+      </div>
     </div>
     <div id="disclaimer">
-        This project is for testing Bitcoin security. Any misuse or illegal activities using this tool is the sole responsibility of the user.
+      This project is for testing Bitcoin security. Any misuse or illegal
+      activities using this tool is the sole responsibility of the user.
     </div>
     <canvas id="matrix"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/bitcoinjs-lib-browser@5.1.7/bitcoinjs.min.js"></script>
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js';
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+      } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js';
+      const firebaseConfig = {
+        apiKey: 'AIzaSyCKs6ym8KwzhZrdIwskooq5ze0hDlxdU3I',
+        authDomain: 'btc-hunt-here.firebaseapp.com',
+        projectId: 'btc-hunt-here',
+        storageBucket: 'btc-hunt-here.appspot.com',
+        messagingSenderId: '75131942165',
+        appId: '1:75131942165:web:ab37d7454191a30c4e651c',
+        measurementId: 'G-NVCFERX1GM',
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      window.db = db;
+      window.collection = collection;
+      window.addDoc = addDoc;
+    </script>
     <script src="script.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8ZXSSB4B4T"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-8ZXSSB4B4T"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
       gtag('config', 'G-8ZXSSB4B4T');
     </script>
-</body>
+  </body>
 </html>
